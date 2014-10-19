@@ -25,7 +25,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(APP_ROOT, '../app_static')
 MEDIA_ROOT = os.path.join(APP_ROOT, '../app_media')
 STATICFILES_DIRS = (
-    os.path.join(APP_ROOT, 'static'),
+    os.path.join(APP_ROOT, 'sprints/tests/test_app/static'),
 )
 
 TEMPLATE_DIRS = (
@@ -66,3 +66,5 @@ INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 SECRET_KEY = 'foobar'
+
+from sprints.tests.local_settings import *  # NOQA

@@ -19,4 +19,4 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS.append('south', )
+# INSTALLED_APPS.append('south', )

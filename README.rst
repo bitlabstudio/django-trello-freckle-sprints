@@ -62,6 +62,14 @@ Usage
 TODO: Describe usage or point to docs. Also describe available settings and
 templatetags.
 
+Settings
+--------
+
+TRELLO_DEVELOPER_KEY
+++++++++++++++++++++
+
+Set this to your [Trello developer key](https://trello.com/1/appKey/generate).
+
 
 Contribute
 ----------
