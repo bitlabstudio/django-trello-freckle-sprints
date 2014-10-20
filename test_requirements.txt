@@ -1,3 +1,4 @@
+-e git+git://github.com/sarumont/py-trello.git@dfa28f80f53397a4c692942544de332590447940#egg=trello
 django-nose
 coverage
 django-coverage

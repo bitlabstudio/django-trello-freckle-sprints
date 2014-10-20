@@ -1,5 +1,38 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block main %}
-Hello world
+<h1>{% trans "Backlog" %}{% if board %}{% blocktrans with board_name=board.name %} for project {{ board_name }}{% endblocktrans %}{% endif %}</h1>
+{% if cards %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Estimated time</th>
+                <th>Estimated cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for card in cards %}
+                <tr>
+                    <td>{{ card.id }}</td>
+                    <td>{{ card.name }}</td>
+                    <td>{{ card.estimated_time }}</td>
+                    <td>{{ card.estimated_cost }}</td>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td colspan="2"><strong>{% trans "Total" %}</strong></td>
+                    <td><strong>{{ total_time }}</strong></td>
+                    <td><strong>{{ total_cost }}</strong></td>
+                </tr>
+        </tbody>
+    </table>
+{% endif %}
+<form method="get" action=".">
+    <div><label>{% trans "Trello Board ID" %}:</label> <input type="text" name="board" /></div>
+    <div><label>{% trans "Hourly rate" %}:</label> <input type="text" name="rate" /></div>
+    <div><input type="submit" value="{% trans "Submit" %}" /></div>
+</form>
 {% endblock %}

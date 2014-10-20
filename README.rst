@@ -36,7 +36,10 @@ To get the latest commit from GitHub
 
     pip install -e git+git://github.com/bitmazk/django-trello-freckle-sprints.git#egg=sprints
 
-TODO: Describe further installation steps (edit / remove the examples below):
+Add the [py-trello](https://github.com/sarumont/py-trello) dependency to your
+requirements.txt and install it into your virtualenv:
+
+    -e git+git://github.com/sarumont/py-trello.git@dfa28f80f53397a4c692942544de332590447940#egg=trello
 
 Add ``sprints`` to your ``INSTALLED_APPS``
 
@@ -56,11 +59,6 @@ Add the ``sprints`` URLs to your ``urls.py``
         url(r'^sprints/', include('sprints.urls')),
     )
 
-Usage
------
-
-TODO: Describe usage or point to docs. Also describe available settings and
-templatetags.
 
 Settings
 --------
@@ -69,6 +67,33 @@ TRELLO_DEVELOPER_KEY
 ++++++++++++++++++++
 
 Set this to your [Trello developer key](https://trello.com/1/appKey/generate).
+
+TRELLO_DEVELOPER_SECRET
++++++++++++++++++++++++
+
+Set this to your [Trello developer secret](https://trello.com/1/appKey/generate).
+
+TRELLO_OAUTH_TOKEN
+++++++++++++++++++
+
+Set this to your oauth token. To obtain your secret you can run
+``ipdb``::
+
+    from trello.util import create_oauth_token
+    create_oauth_token(expiration='never', scope='read', key='yourkey', secret='yoursecret')
+    # follow the instructions and note down your token and secret
+
+
+TRELLO_OAUTH_TOKEN_SECRET
++++++++++++++++++++++++++
+
+Set this to your oauth token secret.
+
+
+Usage
+-----
+
+To get an overview over your current backlog, visit ``/sprints/backlog/``.
 
 
 Contribute
