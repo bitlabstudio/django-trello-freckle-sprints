@@ -18,7 +18,7 @@ class BacklogView(TemplateView):
             token=settings.TRELLO_OAUTH_TOKEN,
             token_secret=settings.TRELLO_OAUTH_TOKEN_SECRET)
         board = self.request.GET.get('board')
-        rate = int(self.request.GET.get('rate'))
+        rate = int(self.request.GET.get('rate', 0))
         cards = None
         total_time = 0
         total_cost = 0
@@ -30,7 +30,7 @@ class BacklogView(TemplateView):
                     cards = list_.list_cards()
                     for card in cards:
                         m = re.search(r'\((\d+)\)$', card.name)
-                        if m.group(0):
+                        if m:
                             card.estimated_time = int(m.groups()[0])
                             card.estimated_cost = \
                                 card.estimated_time / 60.0 * rate
