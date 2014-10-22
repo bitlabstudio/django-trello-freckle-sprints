@@ -1,9 +1,11 @@
 """Views for the sprints app."""
 import re
+import datetime
 
 from django.conf import settings
 from django.views.generic import TemplateView
 
+from freckle import Freckle
 from trello import TrelloClient
 
 
@@ -59,10 +61,24 @@ class SprintView(TemplateView):
         board = self.request.GET.get('board')
         sprint = self.request.GET.get('sprint')
         sprint_list = None
+        start_date = sprint.replace('Sprint-', '')
+        if start_date:
+            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+        project = self.request.GET.get('project')
         rate = int(self.request.GET.get('rate', 0))
         cards = None
         total_time = 0
         total_cost = 0
+        total_actual_time = 0
+        total_actual_cost = 0
+
+        freckle_client = Freckle(
+            account=settings.FRECKLE_ACCOUNT_NAME,
+            token=settings.FRECKLE_API_TOKEN)
+        entries = freckle_client.get_entries(
+            projects=[project, ],
+            date_from=start_date,)
+
         if board:
             board = trello_client.get_board(board)
             lists = board.get_lists('open')
@@ -72,18 +88,32 @@ class SprintView(TemplateView):
                     cards = list_.list_cards()
                     for card in cards:
                         m = re.search(r'\((\d+)\)$', card.name)
+                        card.fetch(eager=False)
                         if m:
                             card.estimated_time = int(m.groups()[0])
                             card.estimated_cost = \
                                 card.estimated_time / 60.0 * rate
                             total_time += card.estimated_time
+                        time_booked = 0
+                        for entry in entries:
+                            if 'c%d' % card.short_id in entry['description']:
+                                time_booked += entry['minutes']
+                        card.actual_time = time_booked
+                        total_actual_time += time_booked
+                        card.actual_cost = time_booked / 60.0 * rate
+
         if total_time and rate:
             total_cost = total_time / 60.0 * rate
+            total_actual_cost = total_actual_time / 60.0 * rate
+
         ctx.update({
+            'entries': entries,
             'board': board,
             'sprint_list': sprint_list,
             'cards': cards,
             'total_time': total_time,
             'total_cost': total_cost,
+            'total_actual_time': total_actual_time,
+            'total_actual_cost': total_actual_cost,
         })
         return ctx

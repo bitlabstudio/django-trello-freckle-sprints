@@ -11,6 +11,8 @@
                 <th>Name</th>
                 <th>Estimated time</th>
                 <th>Estimated cost</th>
+                <th>Actual time</th>
+                <th>Actual cost</th>
             </tr>
         </thead>
         <tbody>
@@ -20,12 +22,16 @@
                     <td>{{ card.name }}</td>
                     <td>{{ card.estimated_time }}</td>
                     <td>{{ card.estimated_cost }}</td>
+                    <td>{{ card.actual_time }}</td>
+                    <td>{{ card.actual_cost }}</td>
                 </tr>
             {% endfor %}
                 <tr>
                     <td colspan="2"><strong>{% trans "Total" %}</strong></td>
                     <td><strong>{{ total_time }}</strong></td>
                     <td><strong>{{ total_cost }}</strong></td>
+                    <td><strong>{{ total_actual_time }}</strong></td>
+                    <td><strong>{{ total_actual_cost }}</strong></td>
                 </tr>
         </tbody>
     </table>

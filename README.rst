@@ -40,6 +40,7 @@ Add the [py-trello](https://github.com/sarumont/py-trello) dependency to your
 requirements.txt and install it into your virtualenv:
 
     -e git+git://github.com/sarumont/py-trello.git@dfa28f80f53397a4c692942544de332590447940#egg=trello
+    -e git+git://github.com/ipmb/freckle.git@1682306f3da86291633c2f5fb93ba982d200c3f4#egg=freckle
 
 Add ``sprints`` to your ``INSTALLED_APPS``
 
@@ -88,6 +89,17 @@ TRELLO_OAUTH_TOKEN_SECRET
 +++++++++++++++++++++++++
 
 Set this to your oauth token secret.
+
+FRECKLE_API_TOKEN
++++++++++++++++++
+
+Set this to your Freckle API token. You can find it under ``Settings > API``.
+
+FRECKLE_ACCOUNT_NAME
+++++++++++++++++++++
+
+Set this to your Freckle account name. This is the subdomain you use when
+logging into Freckle.
 
 
 Usage
