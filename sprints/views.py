@@ -58,12 +58,15 @@ class SprintView(TemplateView):
             api_secret=settings.TRELLO_DEVELOPER_SECRET,
             token=settings.TRELLO_OAUTH_TOKEN,
             token_secret=settings.TRELLO_OAUTH_TOKEN_SECRET)
+        entries = []
         board = self.request.GET.get('board')
         sprint = self.request.GET.get('sprint')
         sprint_list = None
-        start_date = sprint.replace('Sprint-', '')
-        if start_date:
-            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+        start_date = None
+        if sprint:
+            start_date = sprint.replace('Sprint-', '')
+            start_date = datetime.datetime.strptime(
+                start_date, '%Y-%m-%d').date()
         project = self.request.GET.get('project')
         rate = int(self.request.GET.get('rate', 0))
         cards = None
@@ -72,12 +75,13 @@ class SprintView(TemplateView):
         total_actual_time = 0
         total_actual_cost = 0
 
-        freckle_client = Freckle(
-            account=settings.FRECKLE_ACCOUNT_NAME,
-            token=settings.FRECKLE_API_TOKEN)
-        entries = freckle_client.get_entries(
-            projects=[project, ],
-            date_from=start_date,)
+        if project and start_date:
+            freckle_client = Freckle(
+                account=settings.FRECKLE_ACCOUNT_NAME,
+                token=settings.FRECKLE_API_TOKEN)
+            entries = freckle_client.get_entries(
+                projects=[project, ],
+                date_from=start_date,)
 
         if board:
             board = trello_client.get_board(board)
