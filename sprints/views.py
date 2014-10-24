@@ -34,7 +34,7 @@ class BacklogView(TemplateView):
             list_ = c.get_list(tr_board, 'Backlog')
 
         ctx.update({
-            'board': board,
+            'board': tr_board,
             'list_': list_,
         })
         return ctx

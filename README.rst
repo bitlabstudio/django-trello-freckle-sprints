@@ -14,8 +14,11 @@ The idea is that you have a Trello board which has three lists:
   this list will moved into the Sprint list. 
 * Sprint: Contains cards that are currently prioritized for a sprint.
 
-On Trello, add ``(XXX)`` at the end of each card title, where ``XXX`` resembles
-the number of minutes estimated for the card.
+On Trello, add cards to your ``Backlog`` and ``Sprint-YYYY-MM-DD`` lists.
+On each card, add checklists and on each checklist item, add ``(XXX)`` at the
+end of the item name. ``XXX`` resembles the number of minutes estimated for
+that item. This app will go through all checklist items and add up the
+estimated times for you.
 
 On Freckle, when you track time that has been spent on a certain card, just add
 ``cXXX`` to the entry description, where ``XXX`` is the card-ID from Trello
@@ -107,6 +110,7 @@ Usage
 
 To get an overview over your current backlog, visit ``/sprints/backlog/``.
 
+To get an overview over a sprint, visit ``/sprints/sprint/``.
 
 Contribute
 ----------
