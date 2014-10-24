@@ -3,7 +3,7 @@
 
 {% block main %}
 <h1>{% trans "Backlog" %}{% if board %}{% blocktrans with board_name=board.name %} for project {{ board_name }}{% endblocktrans %}{% endif %}</h1>
-{% if cards %}
+{% if list_.cards %}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -14,18 +14,18 @@
             </tr>
         </thead>
         <tbody>
-            {% for card in cards %}
+            {% for card in list_.cards %}
                 <tr>
-                    <td>{{ card.id }}</td>
+                    <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
                     <td>{{ card.name }}</td>
-                    <td>{{ card.estimated_time }}</td>
-                    <td>{{ card.estimated_cost }}</td>
+                    <td>{{ card.time_estimated }}</td>
+                    <td>{{ card.cost_estimated }}</td>
                 </tr>
             {% endfor %}
                 <tr>
                     <td colspan="2"><strong>{% trans "Total" %}</strong></td>
-                    <td><strong>{{ total_time }}</strong></td>
-                    <td><strong>{{ total_cost }}</strong></td>
+                    <td><strong>{{ list_.time_estimated_total }}</strong></td>
+                    <td><strong>{{ list_.cost_estimated_total }}</strong></td>
                 </tr>
         </tbody>
     </table>
