@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% block main %}
-<h1>{% trans "Sprint" %}{% if board %}{% blocktrans with board_name=board.name sprint_name=sprint_list.name %} for project {{ board_name }} / {{ sprint_name }}{% endblocktrans %}{% endif %}</h1>
-{% if cards %}
+<h1>{% trans "Sprint" %}{% if board %}{% blocktrans with board_name=board.name sprint_name=sprint.name %} for project {{ board_name }} / {{ sprint_name }}{% endblocktrans %}{% endif %}</h1>
+{% if list_ %}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -16,22 +16,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for card in cards %}
+            {% for card in list_.cards %}
                 <tr>
-                    <td>{{ card.id }}</td>
+                    <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
                     <td>{{ card.name }}</td>
-                    <td>{{ card.estimated_time }}</td>
-                    <td>{{ card.estimated_cost }}</td>
-                    <td>{{ card.actual_time }}</td>
-                    <td>{{ card.actual_cost }}</td>
+                    <td>{{ card.time_estimated }}</td>
+                    <td>{{ card.cost_estimated }}</td>
+                    <td>{{ card.time_actual }}</td>
+                    <td>{{ card.cost_actual }}</td>
                 </tr>
             {% endfor %}
                 <tr>
                     <td colspan="2"><strong>{% trans "Total" %}</strong></td>
-                    <td><strong>{{ total_time }}</strong></td>
-                    <td><strong>{{ total_cost }}</strong></td>
-                    <td><strong>{{ total_actual_time }}</strong></td>
-                    <td><strong>{{ total_actual_cost }}</strong></td>
+                    <td><strong>{{ list_.time_estimated_total }}</strong></td>
+                    <td><strong>{{ list_.cost_estimated_total }}</strong></td>
+                    <td><strong>{{ list_.time_actual_total }}</strong></td>
+                    <td><strong>{{ list_.cost_actual_total }}</strong></td>
                 </tr>
         </tbody>
     </table>

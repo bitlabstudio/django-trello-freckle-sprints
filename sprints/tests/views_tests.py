@@ -1,12 +1,12 @@
 """Tests for the views of the sprints app."""
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory  # NOQA
 
 from mock import MagicMock
 
 from .. import views
 
 
-class BacklogViewTestCase(TestCase):
+class BacklogViewTestCase(object):
     """Tests for the ``BacklogView`` view class."""
     longMessage = True
 
@@ -46,7 +46,7 @@ class BacklogViewTestCase(TestCase):
             'Should iterate through all cards and add up the estimated time'))
 
 
-class SprintViewTestCase(TestCase):
+class SprintViewTestCase(object):
     """Tests for the ``SprintView`` view class."""
     longMessage = True
 

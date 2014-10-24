@@ -127,7 +127,7 @@ class TrelloClient(object):
                 minutes = self.get_time_from_name(item['name'])
                 time_estimated += minutes
         card['time_estimated'] = time_estimated
-        cost_estimated = time_estimated / 60 * self.rate
+        cost_estimated = time_estimated / 60.0 * self.rate
         card['cost_estimated'] = cost_estimated
         list_['time_estimated_total'] += time_estimated
         list_['cost_estimated_total'] += cost_estimated
