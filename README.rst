@@ -39,12 +39,6 @@ To get the latest commit from GitHub
 
     pip install -e git+git://github.com/bitmazk/django-trello-freckle-sprints.git#egg=sprints
 
-Add the [py-trello](https://github.com/sarumont/py-trello) dependency to your
-requirements.txt and install it into your virtualenv:
-
-    -e git+git://github.com/sarumont/py-trello.git@dfa28f80f53397a4c692942544de332590447940#egg=trello
-    -e git+git://github.com/ipmb/freckle.git@1682306f3da86291633c2f5fb93ba982d200c3f4#egg=freckle
-
 Add ``sprints`` to your ``INSTALLED_APPS``
 
 .. code-block:: python
@@ -79,6 +73,8 @@ Set this to your [Trello developer secret](https://trello.com/1/appKey/generate)
 
 TRELLO_OAUTH_TOKEN
 ++++++++++++++++++
+
+TODO: Describe how to get the tokens
 
 Set this to your oauth token. To obtain your secret you can run
 ``ipdb``::
