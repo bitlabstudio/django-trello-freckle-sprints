@@ -69,7 +69,38 @@ class TrelloClient(object):
         )
         board['time_estimated_total'] = 0
         board['cost_estimated_total'] = 0
+        board['time_actual_total'] = 0
+        board['cost_actual_total'] = 0
         return board
+
+    def get_cards(self, board, freckle_entries):
+        """
+        Returns all cards that have time trackings on Freckle.
+
+        :param board: The trello board that should be searched for matching
+          cards.
+        :param freckle_entries: List of freckle entries for a given timeframe
+          as returned by `FreckleClient.get_entries`.
+
+        """
+        result = []
+        time_actual_total = 0
+        cost_actual_total = 0
+        for card_short_id, card in freckle_entries['cards'].items():
+            for tr_card in board['cards']:
+                if tr_card['idShort'] == card_short_id:
+                    self.enrich_card(board, None, tr_card)
+                    tr_card['time_actual'] = card['minutes']
+                    tr_card['cost_actual'] = card['minutes'] / 60.0 * self.rate
+                    time_actual_total += tr_card['time_actual']
+                    cost_actual_total += tr_card['cost_actual']
+                    for list_ in board['lists']:
+                        if list_['id'] == tr_card['idList']:
+                            tr_card['list_name'] = list_['name']
+                    result.append(tr_card)
+        board['time_actual_total'] = time_actual_total
+        board['cost_actual_total'] = cost_actual_total
+        return result
 
     def get_list(self, board, list_index):
         """
@@ -134,5 +165,7 @@ class TrelloClient(object):
         card['cost_estimated'] = cost_estimated
         board['time_estimated_total'] += time_estimated
         board['cost_estimated_total'] += cost_estimated
-        list_['time_estimated_total'] += time_estimated
-        list_['cost_estimated_total'] += cost_estimated
+
+        if list_ is not None:
+            list_['time_estimated_total'] += time_estimated
+            list_['cost_estimated_total'] += cost_estimated

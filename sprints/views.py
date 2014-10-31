@@ -1,6 +1,7 @@
 """Views for the sprints app."""
 from django.conf import settings
 from django.views.generic import TemplateView
+from django.utils.timezone import now
 
 import trello_api
 import freckle_api
@@ -46,9 +47,13 @@ class SprintView(TemplateView):
         ctx = super(SprintView, self).get_context_data(**kwargs)
 
         board = self.request.GET.get('board')
-        sprint = self.request.GET.get('sprint')
+        project = self.request.GET.get('project')
+        if project:
+            project = int(project)
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date') \
+            or now().strftime('%Y-%m-%d')
         rate = int(self.request.GET.get('rate') or 0)
-        list_ = None
 
         c = trello_api.TrelloClient(
             api_key=settings.TRELLO_DEVELOPER_KEY,
@@ -58,22 +63,21 @@ class SprintView(TemplateView):
             rate=rate,
         )
 
-        if board and sprint:
-            tr_board = c.get_board(board)
-            list_ = c.get_list(tr_board, sprint)
-
+        fr_entries = []
         fr_client = freckle_api.FreckleClient(
             'bitmazk', settings.FRECKLE_API_TOKEN, rate)
+        if project and start_date and end_date:
+            fr_entries = fr_client.get_entries(project, start_date, end_date)
 
-        start_date = None
-        if sprint:
-            start_date = sprint[-10:]
-
-        entries = fr_client.get_entries(30976, start_date)
-        fr_client.enrich_trello_cards(list_, entries)
+        tr_board = None
+        tr_cards = None
+        if board:
+            tr_board = c.get_board(board)
+            tr_cards = c.get_cards(tr_board, fr_entries)
 
         ctx.update({
             'board': tr_board,
-            'list_': list_,
+            'entries': fr_entries,
+            'cards': tr_cards,
         })
         return ctx

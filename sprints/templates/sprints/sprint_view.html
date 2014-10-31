@@ -3,10 +3,11 @@
 
 {% block main %}
 <h1>{% trans "Sprint" %}{% if board %}{% blocktrans with board_name=board.name sprint_name=sprint.name %} for project {{ board_name }} / {{ sprint_name }}{% endblocktrans %}{% endif %}</h1>
-{% if list_ %}
+{% if cards %}
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>List</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Estimated time</th>
@@ -16,8 +17,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for card in list_.cards %}
+            {% for card in cards %}
                 <tr>
+                    <td>{{ card.list_name }}</td>
                     <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
                     <td>{{ card.name }}</td>
                     <td>{{ card.time_estimated }}</td>
@@ -27,17 +29,44 @@
                 </tr>
             {% endfor %}
                 <tr>
-                    <td colspan="2"><strong>{% trans "Total" %}</strong></td>
-                    <td><strong>{{ list_.time_estimated_total }}</strong></td>
-                    <td><strong>{{ list_.cost_estimated_total }}</strong></td>
-                    <td><strong>{{ list_.time_actual_total }}</strong></td>
-                    <td><strong>{{ list_.cost_actual_total }}</strong></td>
+                    <td colspan="3"><strong>{% trans "Total" %}</strong></td>
+                    <td><strong>{{ board.time_estimated_total }}</strong></td>
+                    <td><strong>{{ board.cost_estimated_total }}</strong></td>
+                    <td><strong>{{ board.time_actual_total }}</strong></td>
+                    <td><strong>{{ board.cost_actual_total }}</strong></td>
                 </tr>
+        </tbody>
+    </table>
+{% endif %}
+{% if entries.has_non_cards %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Minutes</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries.entries %}
+                {% if not entry.entry.has_card %}
+                    <tr>
+                        <td>{{ entry.entry.date }}</td>
+                        <td>{{ entry.entry.description }}</td>
+                        <td>{{ entry.entry.minutes }}</td>
+                        <td>{{ entry.entry.cost }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
         </tbody>
     </table>
 {% endif %}
 <form method="get" action=".">
     <div><label>{% trans "Trello Board ID" %}:</label> <input type="text" name="board" /></div>
+    <div><label>{% trans "Freckle Project ID" %}:</label> <input type="text" name="project" /></div>
+    <div><label>{% trans "Start Date" %}:</label> <input type="text" name="start_date" /></div>
+    <div><label>{% trans "End Date" %}:</label> <input type="text" name="End_date" /></div>
     <div><label>{% trans "Hourly rate" %}:</label> <input type="text" name="rate" /></div>
     <div><input type="submit" value="{% trans "Submit" %}" /></div>
 </form>

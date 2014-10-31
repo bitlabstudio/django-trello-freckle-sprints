@@ -5,6 +5,7 @@ See http://developer.letsfreckle.com
 
 """
 import json
+import re
 
 import requests
 
@@ -50,22 +51,52 @@ class FreckleClient(object):
 
         return response.json()
 
-    def get_entries(self, project, start_date):
+    def get_entries(self, project, start_date, end_date):
         """
-        Returns the entries for the given project and start date.
+        Returns the entries for the given project and time frame.
 
         :param project: The project ID.
         :param start_date: String representing the start date (YYYY-MM-DD).
+        :param end_date: String representing the end date (YYYY-MM-DD).
 
         """
-        return self.fetch_json(
+        result = {
+            'entries': [],
+            'cards': {},
+            'has_non_cards': False,
+            'total_time': 0,
+        }
+        result['entries'] = self.fetch_json(
             'entries',
             query_params={
                 'per_page': 1000,
                 'search[from]': start_date,
+                'search[to]': end_date,
                 'search[projects]': '{0}'.format(project),
             }
         )
+
+        total_time = 0
+        for entry in result['entries']:
+            m = re.search(r'c(\d+)', entry['entry']['description'])
+            if m:
+                card_short_id = int(m.groups()[0])
+                if card_short_id not in result['cards']:
+                    result['cards'][card_short_id] = {
+                        'minutes': 0,
+                        'shortId': card_short_id,
+                    }
+                result['cards'][card_short_id]['minutes'] += \
+                    entry['entry']['minutes']
+                entry['entry']['has_card'] = True
+            else:
+                entry['entry']['has_card'] = False
+                entry['entry']['cost'] = \
+                    entry['entry']['minutes'] / 60.0 * self.rate
+                result['has_non_cards'] = True
+            total_time += entry['entry']['minutes']
+        result['total_time'] = total_time
+        return result
 
     def enrich_trello_cards(self, list_, entries):
         """
