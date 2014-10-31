@@ -14,8 +14,8 @@ class BacklogView(TemplateView):
 
         board = self.request.GET.get('board')
         rate = int(self.request.GET.get('rate') or 0)
-        list_ = None
-        tr_board = None
+        selected_lists = [
+            int(list_) for list_ in self.request.GET.get('lists').split(',')]
 
         c = trello_api.TrelloClient(
             api_key=settings.TRELLO_DEVELOPER_KEY,
@@ -25,13 +25,16 @@ class BacklogView(TemplateView):
             rate=rate,
         )
 
+        tr_board = None
+        tr_lists = []
         if board:
             tr_board = c.get_board(board)
-            list_ = c.get_list(tr_board, 'Backlog')
+            for list_index in selected_lists:
+                tr_lists.append(c.get_list(tr_board, list_index))
 
         ctx.update({
             'board': tr_board,
-            'list_': list_,
+            'lists': tr_lists,
         })
         return ctx
 

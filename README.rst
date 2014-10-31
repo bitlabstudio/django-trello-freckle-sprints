@@ -1,28 +1,14 @@
 Django Trello Freckle Sprints
 =============================
 
-A reusable Django app that creates burndown charts based on Trello boards and
-Freckle entries.
-
-The idea is that you have a Trello board which has three lists:
-
-* Whishlist: Contains stuff that the customer adds whenever it comes to their
-  mind. Someone needs to add estimations to these cards and move them into the
-  Backlog.
-* Backlog: Contains cards that have been estimated. The total estimated time
-  is the time left to get everything done to finish the project. Cards from
-  this list will moved into the Sprint list. 
-* Sprint: Contains cards that are currently prioritized for a sprint.
-
-On Trello, add cards to your ``Backlog`` and ``Sprint-YYYY-MM-DD`` lists.
-On each card, add checklists and on each checklist item, add ``(XXX)`` at the
-end of the item name. ``XXX`` resembles the number of minutes estimated for
-that item. This app will go through all checklist items and add up the
-estimated times for you.
+A reusable Django app that helps connection Freckle time entries with Trello
+cards.
 
 On Freckle, when you track time that has been spent on a certain card, just add
 ``cXXX`` to the entry description, where ``XXX`` is the card-ID from Trello
 (you can see that in the URL when you open a card).
+
+For more information, see chapter Usage below.
 
 Installation
 ------------
@@ -104,9 +90,27 @@ logging into Freckle.
 Usage
 -----
 
+Sprint planning
++++++++++++++++
+
 To get an overview over your current backlog, visit ``/sprints/backlog/``.
+Enter the Trello board ID, the lists numbers that contain your backlog and your
+hourly rate.
+
+You will see a table that shows the estimated time and cost for each card in
+the selected lists. The total will give you an idea about how expensive the
+whole project will be in total, given the current feature scope.
+
+In order to plan your next sprint, enable the checkboxes next to each card
+until the selected total matches the budget or hours that you can spend on the
+sprint.
+
+Sprint overview
++++++++++++++++
 
 To get an overview over a sprint, visit ``/sprints/sprint/``.
+
+TODO: Explain more
 
 Contribute
 ----------

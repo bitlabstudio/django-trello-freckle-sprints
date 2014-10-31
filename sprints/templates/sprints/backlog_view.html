@@ -1,12 +1,14 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block main %}
 <h1>{% trans "Backlog" %}{% if board %}{% blocktrans with board_name=board.name %} for project {{ board_name }}{% endblocktrans %}{% endif %}</h1>
-{% if list_.cards %}
+{% if lists %}
     <table class="table table-striped">
         <thead>
             <tr>
+                <th></th>
+                <th>List</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Estimated time</th>
@@ -14,25 +16,40 @@
             </tr>
         </thead>
         <tbody>
-            {% for card in list_.cards %}
-                <tr>
-                    <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
-                    <td>{{ card.name }}</td>
-                    <td>{{ card.time_estimated }}</td>
-                    <td>{{ card.cost_estimated }}</td>
-                </tr>
+            {% for list in lists %}
+                {% for card in list.cards %}
+                    <tr>
+                        <td><input type="checkbox" data-card-id="{{ card.idShort }}" data-class="check-card" /></td>
+                        <td>{{ list.name }}</td>
+                        <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
+                        <td>{{ card.name }}</td>
+                        <td data-time-for="{{ card.idShort }}">{{ card.time_estimated }}</td>
+                        <td data-cost-for="{{ card.idShort }}">{{ card.cost_estimated }}</td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
                 <tr>
-                    <td colspan="2"><strong>{% trans "Total" %}</strong></td>
-                    <td><strong>{{ list_.time_estimated_total }}</strong></td>
-                    <td><strong>{{ list_.cost_estimated_total }}</strong></td>
+                    <td colspan="4"><strong>{% trans "Total" %}</strong></td>
+                    <td><strong>{{ board.time_estimated_total }}</strong></td>
+                    <td><strong>{{ board.cost_estimated_total }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>{% trans "Total selected" %}</strong></td>
+                    <td><strong data-id="total-time"></strong></td>
+                    <td><strong data-id="total-cost"></strong></td>
                 </tr>
         </tbody>
     </table>
 {% endif %}
 <form method="get" action=".">
     <div><label>{% trans "Trello Board ID" %}:</label> <input type="text" name="board" /></div>
+    <div><label>{% trans "Lists" %}:</label> <input type="text" name="lists" /></div>
     <div><label>{% trans "Hourly rate" %}:</label> <input type="text" name="rate" /></div>
     <div><input type="submit" value="{% trans "Submit" %}" /></div>
 </form>
+{% endblock %}
+
+
+{% block extrascript %}
+<script src="{% static "sprints/js/sprints.js" %}"></script>
 {% endblock %}

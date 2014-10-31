@@ -59,7 +59,7 @@ class TrelloClient(object):
 
     def get_board(self, board_id):
         """Gets all important data for a board."""
-        return self.fetch_json(
+        board = self.fetch_json(
             'boards/{0}'.format(board_id),
             query_params={
                 'lists': 'open',
@@ -67,28 +67,29 @@ class TrelloClient(object):
                 'card_checklists': 'all',
             }
         )
+        board['time_estimated_total'] = 0
+        board['cost_estimated_total'] = 0
+        return board
 
-    def get_list(self, board, list_name):
+    def get_list(self, board, list_index):
         """
         Returns a dict with the list of the given name.
 
         Also attaches all cards belonging to that list to the dict.
 
         :param board: A board as returned by ``get_board()``
-        :param list_name: String representing a list name.
+        :param list_index: Integer representing the position of the list.
+          Starts at 1.
 
         """
         result = None
-        for list_ in board['lists']:
-            if list_['name'] == list_name:
-                result = list_
-                result['time_estimated_total'] = 0
-                result['cost_estimated_total'] = 0
-                break
+        result = board['lists'][list_index - 1]
+        result['time_estimated_total'] = 0
+        result['cost_estimated_total'] = 0
         list_cards = []
         for card in board['cards']:
             if card['idList'] == result['id']:
-                self.enrich_card(result, card)
+                self.enrich_card(board, result, card)
                 list_cards.append(card)
         result['cards'] = list_cards
         return result
@@ -110,10 +111,12 @@ class TrelloClient(object):
         except TypeError:
             return 0
 
-    def enrich_card(self, list_, card):
+    def enrich_card(self, board, list_, card):
         """
         Iterates through the checklists of the card and adds estimated times.
 
+        :param board: The board of the given card. Needed to increase the board
+          total time and cost.
         :param list_: The list of the given card. Needed to increase the list
           total time and cost.
         :param card: The card to be enriched.
@@ -129,5 +132,7 @@ class TrelloClient(object):
         card['time_estimated'] = time_estimated
         cost_estimated = time_estimated / 60.0 * self.rate
         card['cost_estimated'] = cost_estimated
+        board['time_estimated_total'] += time_estimated
+        board['cost_estimated_total'] += cost_estimated
         list_['time_estimated_total'] += time_estimated
         list_['cost_estimated_total'] += cost_estimated
