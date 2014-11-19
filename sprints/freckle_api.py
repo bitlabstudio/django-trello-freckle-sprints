@@ -73,6 +73,7 @@ class FreckleClient(object):
                 'search[from]': start_date,
                 'search[to]': end_date,
                 'search[projects]': '{0}'.format(project),
+                'search[billable]': 'true',
             }
         )
 
