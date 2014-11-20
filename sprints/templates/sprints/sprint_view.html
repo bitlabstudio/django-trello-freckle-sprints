@@ -59,6 +59,29 @@
                     </tr>
                 {% endif %}
             {% endfor %}
+            <tr>
+                <td colspan="1"><strong>{% trans "Total" %}</strong></td>
+                <td></td>
+                <td><strong>{{ entries.total_non_card_time }}</strong></td>
+                <td><strong>{{ entries.total_non_card_cost }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="1"></th>
+                <th>{% trans "Minutes" %}</th>
+                <th>{% trans "Cost" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="width:100%;"><strong>{% trans "Grand total" %}</strong></td>
+                <td><strong>{{ board.time_actual_total|add:entries.total_non_card_time }}</strong></td>
+                <td><strong>{{ board.cost_actual_total|add:entries.total_non_card_cost }}</strong></td>
+            </tr>
         </tbody>
     </table>
 {% endif %}

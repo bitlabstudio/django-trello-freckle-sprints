@@ -78,6 +78,7 @@ class FreckleClient(object):
         )
 
         total_time = 0
+        total_non_card_time = 0
         for entry in result['entries']:
             m = re.search(r'c(\d+)', entry['entry']['description'])
             if m:
@@ -94,9 +95,12 @@ class FreckleClient(object):
                 entry['entry']['has_card'] = False
                 entry['entry']['cost'] = \
                     entry['entry']['minutes'] / 60.0 * self.rate
+                total_non_card_time += entry['entry']['minutes']
                 result['has_non_cards'] = True
             total_time += entry['entry']['minutes']
         result['total_time'] = total_time
+        result['total_non_card_time'] = total_non_card_time
+        result['total_non_card_cost'] = total_non_card_time / 60.0 * self.rate
         return result
 
     def enrich_trello_cards(self, list_, entries):
