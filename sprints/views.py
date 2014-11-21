@@ -7,6 +7,10 @@ import trello_api
 import freckle_api
 
 
+class HomeView(TemplateView):
+    template_name = 'sprints/home_view.html'
+
+
 class BacklogView(TemplateView):
     template_name = 'sprints/backlog_view.html'
 

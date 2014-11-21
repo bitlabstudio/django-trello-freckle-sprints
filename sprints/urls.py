@@ -6,6 +6,9 @@ from . import views
 
 urlpatterns = patterns(
     '',
+    url(r'^$',
+        views.HomeView.as_view(),
+        name='sprints_home'),
     url(r'^backlog/$',
         views.BacklogView.as_view(),
         name='sprints_backlog'),
