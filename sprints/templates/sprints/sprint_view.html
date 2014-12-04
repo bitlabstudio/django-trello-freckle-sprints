@@ -67,24 +67,25 @@
             </tr>
         </tbody>
     </table>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th colspan="1"></th>
-                <th>{% trans "Minutes" %}</th>
-                <th>{% trans "Cost" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="width:100%;"><strong>{% trans "Grand total" %}</strong></td>
-                <td><strong>{{ board.time_actual_total|add:entries.total_non_card_time }}</strong></td>
-                <td><strong>{{ board.cost_actual_total|add:entries.total_non_card_cost }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
 {% endif %}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th colspan="1"></th>
+            <th>{% trans "Minutes" %}</th>
+            <th>{% trans "Cost" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="width:100%;"><strong>{% trans "Grand total" %}</strong></td>
+            <td><strong>{{ board.time_actual_total|add:entries.total_non_card_time }}</strong></td>
+            <td><strong>{{ board.cost_actual_total|add:entries.total_non_card_cost }}</strong></td>
+        </tr>
+    </tbody>
+</table>
+
 <form method="get" action=".">
     <div><label>{% trans "Trello Board ID" %}:</label> <input type="text" name="board" /></div>
     <div><label>{% trans "Freckle Project ID" %}:</label> <input type="text" name="project" /></div>
