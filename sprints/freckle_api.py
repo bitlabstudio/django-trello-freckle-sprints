@@ -64,6 +64,7 @@ class FreckleClient(object):
             'entries': [],
             'cards': {},
             'has_non_cards': False,
+            'has_free_non_cards': False,
             'total_time': 0,
         }
         result['entries'] = self.fetch_json(
@@ -73,12 +74,12 @@ class FreckleClient(object):
                 'search[from]': start_date,
                 'search[to]': end_date,
                 'search[projects]': '{0}'.format(project),
-                'search[billable]': 'true',
             }
         )
 
         total_time = 0
         total_non_card_time = 0
+        total_free_non_card_time = 0
         for entry in result['entries']:
             m = re.search(r'c(\d+)', entry['entry']['description'])
             if m:
@@ -95,12 +96,19 @@ class FreckleClient(object):
                 entry['entry']['has_card'] = False
                 entry['entry']['cost'] = \
                     entry['entry']['minutes'] / 60.0 * self.rate
-                total_non_card_time += entry['entry']['minutes']
-                result['has_non_cards'] = True
+                if entry['entry']['billable']:
+                    total_non_card_time += entry['entry']['minutes']
+                    result['has_non_cards'] = True
+                else:
+                    total_free_non_card_time += entry['entry']['minutes']
+                    result['has_free_non_cards'] = True
             total_time += entry['entry']['minutes']
         result['total_time'] = total_time
         result['total_non_card_time'] = total_non_card_time
         result['total_non_card_cost'] = total_non_card_time / 60.0 * self.rate
+        result['total_free_non_card_time'] = total_free_non_card_time
+        result['total_free_non_card_cost'] = (
+            total_free_non_card_time / 60.0 * self.rate)
         return result
 
     def enrich_trello_cards(self, list_, entries):
