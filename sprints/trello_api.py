@@ -86,20 +86,31 @@ class TrelloClient(object):
         result = []
         time_actual_total = 0
         cost_actual_total = 0
+        time_free_total = 0
+        cost_free_total = 0
         for card_short_id, card in freckle_entries['cards'].items():
             for tr_card in board['cards']:
                 if tr_card['idShort'] == card_short_id:
-                    self.enrich_card(board, None, tr_card)
+                    self.enrich_card(board, None, tr_card)  # Add estimations
                     tr_card['time_actual'] = card['minutes']
                     tr_card['cost_actual'] = card['minutes'] / 60.0 * self.rate
                     time_actual_total += tr_card['time_actual']
                     cost_actual_total += tr_card['cost_actual']
+
+                    tr_card['time_free'] = card['minutes_free']
+                    tr_card['cost_free'] = (
+                        card['minutes_free'] / 60.0 * self.rate)
+                    time_free_total += tr_card['time_free']
+                    cost_free_total += tr_card['cost_free']
+
                     for list_ in board['lists']:
                         if list_['id'] == tr_card['idList']:
                             tr_card['list_name'] = list_['name']
                     result.append(tr_card)
         board['time_actual_total'] = time_actual_total
         board['cost_actual_total'] = cost_actual_total
+        board['time_free_total'] = time_free_total
+        board['cost_free_total'] = cost_free_total
         return result
 
     def get_list(self, board, list_index):

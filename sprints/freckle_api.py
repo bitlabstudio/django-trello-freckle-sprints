@@ -83,15 +83,20 @@ class FreckleClient(object):
         for entry in result['entries']:
             m = re.search(r'c(\d+)', entry['entry']['description'])
             if m:
+                entry['entry']['has_card'] = True
                 card_short_id = int(m.groups()[0])
                 if card_short_id not in result['cards']:
                     result['cards'][card_short_id] = {
                         'minutes': 0,
+                        'minutes_free': 0,
                         'shortId': card_short_id,
                     }
-                result['cards'][card_short_id]['minutes'] += \
-                    entry['entry']['minutes']
-                entry['entry']['has_card'] = True
+                if entry['entry']['billable']:
+                    result['cards'][card_short_id]['minutes'] += \
+                        entry['entry']['minutes']
+                else:
+                    result['cards'][card_short_id]['minutes_free'] += \
+                        entry['entry']['minutes']
             else:
                 entry['entry']['has_card'] = False
                 entry['entry']['cost'] = \

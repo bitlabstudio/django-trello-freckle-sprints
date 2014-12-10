@@ -4,6 +4,7 @@
 {% block main %}
 <h1>{% trans "Sprint" %}{% if board %}{% blocktrans with board_name=board.name sprint_name=sprint.name %} for project {{ board_name }} / {{ sprint_name }}{% endblocktrans %}{% endif %}</h1>
 {% if cards %}
+    <h2>{% trans "Time booked on Trello cards" %}</h2>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -12,6 +13,8 @@
                 <th>{% trans "Name" %}</th>
                 <th>{% trans "Estimated time" %}</th>
                 <th>{% trans "Estimated cost" %}</th>
+                <th>{% trans "Waived time" %}</th>
+                <th>{% trans "Waived cost" %}</th>
                 <th>{% trans "Actual time" %}</th>
                 <th>{% trans "Actual cost" %}</th>
             </tr>
@@ -24,6 +27,8 @@
                     <td>{{ card.name }}</td>
                     <td>{{ card.time_estimated }}</td>
                     <td>{{ card.cost_estimated }}</td>
+                    <td>{{ card.time_free }}</td>
+                    <td>{{ card.cost_free }}</td>
                     <td>{{ card.time_actual }}</td>
                     <td>{{ card.cost_actual }}</td>
                 </tr>
@@ -32,13 +37,17 @@
                     <td colspan="3"><strong>{% trans "Total" %}</strong></td>
                     <td><strong>{{ board.time_estimated_total }}</strong></td>
                     <td><strong>{{ board.cost_estimated_total }}</strong></td>
+                    <td><strong>{{ board.time_free_total }}</strong></td>
+                    <td><strong>{{ board.cost_free_total }}</strong></td>
                     <td><strong>{{ board.time_actual_total }}</strong></td>
                     <td><strong>{{ board.cost_actual_total }}</strong></td>
                 </tr>
         </tbody>
     </table>
 {% endif %}
+
 {% if entries.has_non_cards %}
+    <h2>{% trans "Time booked without Trello cards" %}</h2>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -70,6 +79,7 @@
 {% endif %}
 
 {% if entries.has_free_non_cards %}
+    <h2>{% trans "Waived time booked without Trello cards" %}</h2>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -101,6 +111,7 @@
 {% endif %}
 
 <table class="table table-striped">
+    <h2>{% trans "Grand totals" %}</h2>
     <thead>
         <tr>
             <th colspan="1"></th>
@@ -110,7 +121,12 @@
     </thead>
     <tbody>
         <tr>
-            <td style="width:100%;"><strong>{% trans "Grand total" %}</strong></td>
+            <td style="width:100%;"><strong>{% trans "Grand total waived" %}</strong></td>
+            <td><strong>{{ board.time_free_total|add:entries.total_free_non_card_time }}</strong></td>
+            <td><strong>{{ board.cost_free_total|add:entries.total_free_non_card_cost }}</strong></td>
+        </tr>
+        <tr>
+            <td style="width:100%;"><strong>{% trans "Grand total billable" %}</strong></td>
             <td><strong>{{ board.time_actual_total|add:entries.total_non_card_time }}</strong></td>
             <td><strong>{{ board.cost_actual_total|add:entries.total_non_card_cost }}</strong></td>
         </tr>
