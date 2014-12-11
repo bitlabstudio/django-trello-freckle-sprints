@@ -91,15 +91,14 @@ class TrelloClient(object):
         for card_short_id, card in freckle_entries['cards'].items():
             for tr_card in board['cards']:
                 if tr_card['idShort'] == card_short_id:
-                    self.enrich_card(board, None, tr_card)  # Add estimations
+                    self.enrich_card(board, None, tr_card)
                     tr_card['time_actual'] = card['minutes']
-                    tr_card['cost_actual'] = card['minutes'] / 60.0 * self.rate
+                    tr_card['cost_actual'] = card['cost']
                     time_actual_total += tr_card['time_actual']
                     cost_actual_total += tr_card['cost_actual']
 
                     tr_card['time_free'] = card['minutes_free']
-                    tr_card['cost_free'] = (
-                        card['minutes_free'] / 60.0 * self.rate)
+                    tr_card['cost_free'] = card['cost_free']
                     time_free_total += tr_card['time_free']
                     cost_free_total += tr_card['cost_free']
 

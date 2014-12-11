@@ -78,42 +78,61 @@ class FreckleClient(object):
         )
 
         total_time = 0
+        total_cost = 0
         total_non_card_time = 0
+        total_non_card_cost = 0
         total_free_non_card_time = 0
+        total_free_non_card_cost = 0
         for entry in result['entries']:
+            rate = self.rate
             m = re.search(r'c(\d+)', entry['entry']['description'])
+            m2 = re.search(r'rate(\d+)', entry['entry']['description'])
+            if m2:
+                rate = int(m2.groups()[0])
+                entry['entry']['rate_override'] = rate
             if m:
                 entry['entry']['has_card'] = True
                 card_short_id = int(m.groups()[0])
                 if card_short_id not in result['cards']:
                     result['cards'][card_short_id] = {
                         'minutes': 0,
+                        'cost': 0,
                         'minutes_free': 0,
+                        'cost_free': 0,
                         'shortId': card_short_id,
                     }
                 if entry['entry']['billable']:
                     result['cards'][card_short_id]['minutes'] += \
                         entry['entry']['minutes']
+                    result['cards'][card_short_id]['cost'] += \
+                        entry['entry']['minutes'] / 60.0 * rate
                 else:
                     result['cards'][card_short_id]['minutes_free'] += \
                         entry['entry']['minutes']
+                    result['cards'][card_short_id]['cost_free'] += \
+                        entry['entry']['minutes'] / 60.0 * rate
             else:
                 entry['entry']['has_card'] = False
                 entry['entry']['cost'] = \
-                    entry['entry']['minutes'] / 60.0 * self.rate
+                    entry['entry']['minutes'] / 60.0 * rate
                 if entry['entry']['billable']:
-                    total_non_card_time += entry['entry']['minutes']
                     result['has_non_cards'] = True
+                    total_non_card_time += entry['entry']['minutes']
+                    total_non_card_cost += (
+                        entry['entry']['minutes'] / 60.0 * rate)
                 else:
-                    total_free_non_card_time += entry['entry']['minutes']
                     result['has_free_non_cards'] = True
+                    total_free_non_card_time += entry['entry']['minutes']
+                    total_free_non_card_cost += (
+                        entry['entry']['minutes'] / 60.0 * rate)
             total_time += entry['entry']['minutes']
+            total_cost += entry['entry']['minutes'] / 60.0 * rate
         result['total_time'] = total_time
+        result['total_cost'] = total_cost
         result['total_non_card_time'] = total_non_card_time
-        result['total_non_card_cost'] = total_non_card_time / 60.0 * self.rate
+        result['total_non_card_cost'] = total_non_card_cost
         result['total_free_non_card_time'] = total_free_non_card_time
-        result['total_free_non_card_cost'] = (
-            total_free_non_card_time / 60.0 * self.rate)
+        result['total_free_non_card_cost'] = total_free_non_card_cost
         return result
 
     def enrich_trello_cards(self, list_, entries):
