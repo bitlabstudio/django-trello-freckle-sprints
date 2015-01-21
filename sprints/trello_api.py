@@ -144,7 +144,7 @@ class TrelloClient(object):
           minutes.
 
         """
-        m = re.search(r'\((\d+)\)$', name)
+        m = re.search(r'\((-?\d+)\)$', name)
         if not m:
             return 0
         try:
