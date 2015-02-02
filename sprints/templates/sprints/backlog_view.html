@@ -24,14 +24,14 @@
                         <td><a href="{{ card.shortUrl }}" target="_blank">{{ card.idShort }}</a></td>
                         <td>{{ card.name }}</td>
                         <td data-time-for="{{ card.idShort }}">{{ card.time_estimated }}</td>
-                        <td data-cost-for="{{ card.idShort }}">{{ card.cost_estimated }}</td>
+                        <td data-cost-for="{{ card.idShort }}">{{ card.cost_estimated|floatformat:2 }}</td>
                     </tr>
                 {% endfor %}
             {% endfor %}
                 <tr>
                     <td colspan="4"><strong>{% trans "Total" %}</strong></td>
                     <td><strong>{{ board.time_estimated_total }}</strong></td>
-                    <td><strong>{{ board.cost_estimated_total }}</strong></td>
+                    <td><strong>{{ board.cost_estimated_total|floatformat:2 }}</strong></td>
                 </tr>
                 <tr>
                     <td colspan="4"><strong>{% trans "Total selected" %}</strong></td>
