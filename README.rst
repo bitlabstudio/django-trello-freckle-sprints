@@ -38,10 +38,9 @@ Add the ``sprints`` URLs to your ``urls.py``
 
 .. code-block:: python
 
-    urlpatterns = patterns('',
-        ...
+    urlpatterns = [
         url(r'^sprints/', include('sprints.urls')),
-    )
+    ]
 
 
 Settings

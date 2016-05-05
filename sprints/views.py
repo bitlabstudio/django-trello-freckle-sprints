@@ -3,8 +3,8 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from django.utils.timezone import now
 
-import trello_api
-import freckle_api
+from . import trello_api
+from . import freckle_api
 
 
 class HomeView(TemplateView):

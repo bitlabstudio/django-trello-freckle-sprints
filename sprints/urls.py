@@ -1,11 +1,10 @@
 """URLs for the sprints app."""
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$',
         views.HomeView.as_view(),
         name='sprints_home'),
@@ -15,4 +14,4 @@ urlpatterns = patterns(
     url(r'^sprint/$',
         views.SprintView.as_view(),
         name='sprints_sprint'),
-)
+]
